@@ -7,6 +7,7 @@
     <li>The Function builds an endpoint link by passing the User Query (arg2 AKA process.argv[3]) into the Bands in Town API Url </li>
     <li>An axios call is made that returns the JSON data into the "response" variable</li>
     <li>From there I simply console.log all of the individual data points that I need by referencing them through the response variable</li>
+    <li>Moment is used to convert the concert's timestamp into something more usable</li>
     <li>I also included a catch command that checks for an error and then logs it to the console</li>
 </ul>
 <h2>Movie-this</h2>
