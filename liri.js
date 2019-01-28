@@ -2,8 +2,7 @@ require("dotenv").config();
 var Spotify = require('node-spotify-api');
 var keys = require("./keys.js");
 var axios = require("axios")
-
-var spotify = new Spotify(keys.spotify);
+var moment = require("moment")
 
 var arg1 = process.argv[2]
 
@@ -15,14 +14,20 @@ if(arg1 === "concert-this"){
     var bitArtist =  process.argv[3]
     var bandsInTownQuery = "https://rest.bandsintown.com/artists/" + bitArtist + "/events?app_id=codingbootcamp"
 
-    axios.get(bandsInTownQuery).then(
+    axios.get(bandsInTownQuery)
+    .then(
         function(response){
-            console.log("Venue Name: " + response)
-            // console.log("Venue Location: " + response.venue.city)
-            // console.log("Venue Date: " + response.datetime)
+            console.log("------------------------")
+            console.log("Venue Name: " + response.data[0].venue.name)
+            console.log("Venue Location: " + response.data[0].venue.city + ", " + response.data[0].venue.region)
+            var dateFormat = moment(response.data[0].datetime).format("MM/DD/YYYY")
+            console.log("Venue Date: " + dateFormat)
+            console.log("------------------------")
             console.log(bandsInTownQuery)
-         }
-    )
+         })
+    .catch(function (error) {
+        console.log(error);
+      })
 }
 
 if(arg1 === "movie-this"){
@@ -32,9 +37,6 @@ if(arg1 === "movie-this"){
     var omdbQuery = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short" + "&apikey=" + omdb + "&"
 
     axios.get(omdbQuery)
-    .catch(function (error) {
-        console.log(error);
-      })
     .then(
         function(response){
             console.log("-----------------------")
@@ -48,6 +50,12 @@ if(arg1 === "movie-this"){
             console.log("\nActors: " + response.data.Actors)
             console.log("-------------------------")
          })
-        
+      .catch(function (error) {
+        console.log(error);
+      })
+}
+
+if(arg1 === "spotify-this-song"){
+    var spotify = new Spotify(keys.spotify);
 }
 
