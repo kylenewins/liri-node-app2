@@ -78,7 +78,7 @@ function movieThis(){
 
 function spotifyThis(){
     var spotify = new Spotify(keys.spotify);
-    var spotifyQuery = spotify.search({type: "track", query: arg2, limit: 1},
+    spotify.search({type: "track", query: arg2, limit: 1},
     function(error, data){
         if(error){
             console.log("Error Ocurred: " + error)
