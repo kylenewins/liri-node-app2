@@ -57,5 +57,22 @@ if(arg1 === "movie-this"){
 
 if(arg1 === "spotify-this-song"){
     var spotify = new Spotify(keys.spotify);
+    var song = process.argv[3]
+    var spotifyQuery = spotify.search({type: "track", query: song, limit: 1},
+    function(error, data){
+        if(error){
+            console.log("Error Ocurred: " + error)
+        }
+        else {
+        var response = data.tracks.items[0]
+        console.log("----------------------")
+        console.log("Artist: " + response.album.artists[0].name)
+        console.log("Track Name: " + response.name)
+        console.log("Spotify Link: " + response.external_urls.spotify)
+        console.log("Album Name: " + response.album.name)
+        console.log("------------------------")
+        }
+    })
+
 }
 
