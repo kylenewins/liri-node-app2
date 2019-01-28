@@ -3,16 +3,38 @@ var Spotify = require('node-spotify-api');
 var keys = require("./keys.js");
 var axios = require("axios")
 var moment = require("moment")
+var fs = require("fs")
 
 var arg1 = process.argv[2]
+var arg2 = process.argv[3]
 
 // console.log(bandsInTownQuery)
 // console.log(omdbQuery)
 // console.log(spotify)
 
-if(arg1 === "concert-this"){
-    var bitArtist =  process.argv[3]
-    var bandsInTownQuery = "https://rest.bandsintown.com/artists/" + bitArtist + "/events?app_id=codingbootcamp"
+function runApp(userCommand, userQuery){
+    switch(userCommand){
+        case "concert-this":
+            concertThis();
+            break;
+        case "spotify-this-song":
+            spotifyThis();
+            break;
+        case "movie-this":
+            movieThis();
+            break;
+        case "do-what-it-says":
+            doThis();
+            break;
+        default:
+            console.log("I didn't quite get that, make sure you use hyphens in your query!")
+            break;
+    }
+}
+runApp(arg1, arg2)
+
+function concertThis(){
+    var bandsInTownQuery = "https://rest.bandsintown.com/artists/" + arg2 + "/events?app_id=codingbootcamp"
 
     axios.get(bandsInTownQuery)
     .then(
@@ -30,11 +52,10 @@ if(arg1 === "concert-this"){
       })
 }
 
-if(arg1 === "movie-this"){
-    var movie = process.argv[3]
+function movieThis(){
     var omdb = keys.omdb.id
     
-    var omdbQuery = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short" + "&apikey=" + omdb + "&"
+    var omdbQuery = "http://www.omdbapi.com/?t=" + arg2 + "&y=&plot=short" + "&apikey=" + omdb + "&"
 
     axios.get(omdbQuery)
     .then(
@@ -55,10 +76,9 @@ if(arg1 === "movie-this"){
       })
 }
 
-if(arg1 === "spotify-this-song"){
+function spotifyThis(){
     var spotify = new Spotify(keys.spotify);
-    var song = process.argv[3]
-    var spotifyQuery = spotify.search({type: "track", query: song, limit: 1},
+    var spotifyQuery = spotify.search({type: "track", query: arg2, limit: 1},
     function(error, data){
         if(error){
             console.log("Error Ocurred: " + error)
@@ -73,6 +93,15 @@ if(arg1 === "spotify-this-song"){
         console.log("------------------------")
         }
     })
-
 }
 
+function doThis(){
+    fs.readFile("random.txt", "utf8", function(error, data){
+        if(error){return console.log(error)}
+        var dataFormat = data.split(",")
+        arg1 = dataFormat[0]
+        arg2 = dataFormat[1]
+
+        runApp(arg1, arg2)
+    })
+}
